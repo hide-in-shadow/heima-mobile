@@ -3,6 +3,7 @@ import jsonBig from 'json-bigint'
 import store from '@/store'
 import router from '@/router'
 
+// 创建了一个axios实例 可以 创建多个 配置不同的基准地址
 const request = axios.create({
   baseURL: 'http://ttapi.research.itcast.cn/' // 请求的基准URL地址
 })
