@@ -24,9 +24,12 @@ request.defaults.transformResponse = [
 // 请求拦截器  设置响应头token
 request.interceptors.request.use(
   (req) => {
-    // 将 vuex 里的 token 提取出来当做响应头 header
+    // 将 vuex 里的 token 提取出来当做响应头 headers
     const token = store.state.token
-    if (token) req.headers.token = `Bearer ${token.token}`
+    // vuex 中 state里的数据 token 里的属性 token
+    if (token && token.token) {
+      req.headers.Authorization = `Bearer ${token.token}`
+    }
     return req
   },
   (err) => {

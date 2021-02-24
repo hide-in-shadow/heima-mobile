@@ -19,7 +19,7 @@
         </template>
       </van-field>
       <!-- 登录 -->
-      <div style="margin: 16px;">
+      <div class="login-btn-wrap">
         <van-button class="login-btn" block type="info" native-type="submit">登录</van-button>
       </div>
     </van-form>
@@ -43,7 +43,7 @@ export default {
       loginFormRules: {
         mobile: [
           { required: true, message: '手机号不能为空' },
-          { pattern: /^1[3|5|7|8]\d{9}$/, message: '手机号格式错误' }
+          { pattern: /^1[3578]\d{9}$/, message: '手机号格式错误' }
         ],
         code: [
           { required: true, message: '验证码不能为空' },
@@ -70,6 +70,7 @@ export default {
         this.$toast.success('登录成功')
         // 调用 vuex 中 getToken 函数 将 token 存在 vuex 中
         this.$store.commit('getToken', data.data)
+        this.$router.push('/')
       } catch (err) {
         console.log(err)
         this.$toast.fail('登录失败，手机号或验证码错误')

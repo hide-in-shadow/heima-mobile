@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { getItem, setItem } from '@/utils/storage.js'
+import { getItem, setItem, removeItem } from '@/utils/storage.js'
 
 Vue.use(Vuex)
 
@@ -14,6 +14,11 @@ export default new Vuex.Store({
     getToken(state, token) {
       state.token = token
       setItem('userToken', token)
+    },
+    // 用户退出 移除本地存储 token重新获取
+    removeToken(state) {
+      removeItem('userToken')
+      state.token = getItem('userToken')
     }
   },
   actions: {},

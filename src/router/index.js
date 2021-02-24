@@ -4,7 +4,32 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
-  { path: '/', redirect: '/login' },
+  {
+    path: '/',
+    component: () => import('@/views/layout'),
+    children: [
+      {
+        path: '', // 默认子路由
+        name: 'home',
+        component: () => import('@/views/tab-bar/home')
+      },
+      {
+        path: '/wenda',
+        name: 'wenda',
+        component: () => import('@/views/tab-bar/wenda')
+      },
+      {
+        path: '/shipin',
+        name: 'shipin',
+        component: () => import('@/views/tab-bar/shipin')
+      },
+      {
+        path: '/mine',
+        name: 'mine',
+        component: () => import('@/views/tab-bar/mine')
+      }
+    ]
+  },
   {
     path: '/login',
     name: 'login',

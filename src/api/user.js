@@ -16,3 +16,11 @@ export const sendCode = (message) => {
     url: `/app/v1_0/sms/codes/${message}`
   })
 }
+
+// 获取用户信息
+export const getUser = () => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/user'
+  })
+}
