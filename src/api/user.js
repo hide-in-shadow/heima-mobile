@@ -24,3 +24,20 @@ export const getUser = () => {
     url: '/app/v1_0/user'
   })
 }
+
+// 获取新闻导航列表
+export const getNewsNav = () => {
+  return request({
+    method: 'get',
+    url: '/app/v1_0/channels'
+  })
+}
+
+// 获取文章列表
+export const getArticleList = (params) => {
+  return request({
+    method: 'get',
+    url: '/app/v1_1//articles',
+    params
+  })
+}
