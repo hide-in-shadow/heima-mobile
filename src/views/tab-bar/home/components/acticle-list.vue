@@ -2,7 +2,7 @@
   <div class="article-list">
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh" success-text="刷新成功">
       <van-list class="heima" v-model="loading" :error.sync="error" error-text="加载失败，点击重新加载" @load="getArticleList" :finished="finished" finished-text="没有更多了">
-        <van-cell v-for="item in articleList" :key="item.art_id" :title="item.title" />
+        <articleItem v-for="(item,i) in articleList" :key="i" :item="item"></articleItem>
       </van-list>
     </van-pull-refresh>
   </div>
@@ -10,9 +10,12 @@
 
 <script>
 import { getArticleList } from '@/api/user'
+import articleItem from './article-item/index.vue'
 export default {
   name: 'articleList',
-  components: {},
+  components: {
+    articleItem
+  },
   props: ['newsNav'],
   data() {
     return {

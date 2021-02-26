@@ -33,8 +33,8 @@
       </div>
     </div>
     <!-- 未登录 -->
-    <div v-else class="header" style="align-items: center;">
-      <img class="mobile-img" src="~@/assets/mobile.png" @click="$router.push('/login')">
+    <div v-else class="header" style="align-items: center;" @click="$router.push('/login')">
+      <img class="mobile-img" src="~@/assets/mobile.png">
       <div class="zhuce">注册/登录</div>
     </div>
 

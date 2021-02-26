@@ -1,7 +1,7 @@
 <template>
   <div class="home-container">
     <!-- 导航栏 -->
-    <van-nav-bar class="page-nav-bar">
+    <van-nav-bar class="page-nav-bar" fixed>
       <van-button class="search-btn" slot="title" type="info" size="small" round icon="search">搜索</van-button>
     </van-nav-bar>
     <!-- /导航栏 -->
@@ -68,7 +68,7 @@ export default {
     width: 100%;
   }
   // 用于更改框架的深层格式，默认最大宽度为60%
-  /deep/.van-nav-bar__title {
+  /deep/ .van-nav-bar__title {
     max-width: unset; // 不设置
   }
   .search-btn {
@@ -95,8 +95,22 @@ export default {
     .van-tab--active .van-tab__text {
       color: #333 !important;
     }
+    .van-tabs__content {
+      padding-top: 90px;
+    }
+    .van-tabs__nav--line {
+      height: unset; // 不设置
+      .artcile-list {
+        height: 79vh;
+        overflow: auto;
+      }
+    }
     .van-tabs__nav {
       padding: 0;
+      position: fixed;
+      top: 92px;
+      z-index: 2;
+      width: 100%;
       .van-tabs__line {
         width: 31px !important;
         height: 6px;

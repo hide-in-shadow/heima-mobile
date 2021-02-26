@@ -7,3 +7,7 @@ body {
 .page-nav-bar .van-nav-bar__title {
   color: #fff;
 }
+.page-nav-bar .van-nav-bar__left i,
+.page-nav-bar .van-nav-bar__left span {
+  color: #fff;
+}
