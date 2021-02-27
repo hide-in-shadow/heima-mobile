@@ -61,7 +61,7 @@ export default {
         })
         // 将 获取 的数据 添加到 articleList 尾部
         this.articleList.push(...data.data.results)
-        console.log(data.data)
+        // console.log(data.data)
         // 本次更新完成 将 loading 设置为 false
         this.loading = false
         // 判断 本次获取 的 数据列表长度

@@ -26,9 +26,7 @@ export default {
   data() {
     return {}
   },
-  created() {
-    console.log(this.item)
-  },
+  created() {},
   mounted() {},
   methods: {},
   computed: {},

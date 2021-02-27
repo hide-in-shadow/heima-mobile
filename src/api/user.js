@@ -25,11 +25,11 @@ export const getUser = () => {
   })
 }
 
-// 获取新闻导航列表
-export const getNewsNav = () => {
+// 获取用户的新闻导航列表
+export const getUserNewsNav = () => {
   return request({
     method: 'get',
-    url: '/app/v1_0/channels'
+    url: '/app/v1_0/user/channels'
   })
 }
 
@@ -39,5 +39,13 @@ export const getArticleList = (params) => {
     method: 'get',
     url: '/app/v1_1//articles',
     params
+  })
+}
+
+// 获取全部的新闻导航列表
+export const getNewsNav = () => {
+  return request({
+    method: 'get',
+    url: '/app/v1_0/channels'
   })
 }

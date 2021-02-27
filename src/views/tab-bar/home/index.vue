@@ -7,7 +7,7 @@
     <!-- /导航栏 -->
     <!-- animated 切换标签 转场动画 swipeable 滑动切换标签页 -->
     <van-tabs v-model="active" animated swipeable>
-      <van-tab v-for="value in newsNavList" :title="value.name" :key="value.id">
+      <van-tab v-for="value in userNavList" :title="value.name" :key="value.id">
         <!-- 频道文章列表 -->
         <artiveList :newsNav='value'></artiveList>
       </van-tab>
@@ -16,39 +16,49 @@
       <div slot="nav-right" class="placeholder">
       </div>
       <!-- 汉堡按钮 -->
-      <div slot="nav-right" class="hamburger-btn">
+      <div slot="nav-right" class="hamburger-btn" @click="navListShow=true">
         <i class="iconfont icon-gengduo"></i>
       </div>
     </van-tabs>
+
+    <!-- 汉堡按钮弹出层 -->
+    <van-popup v-model="navListShow" :overlay='false' closeable position="bottom" round :style="{ height: '100%' }" class="edit-channel-popup">
+      <!-- 弹出层内容 -->
+      <navListShow :userNavList='userNavList' />
+    </van-popup>
   </div>
 </template>
 
 <script>
-import { getNewsNav } from '@/api/user'
+import { getUserNewsNav } from '@/api/user'
 import artiveList from './components/acticle-list'
+import navListShow from './components/navlist-show'
 export default {
   name: 'home',
   components: {
-    artiveList
+    artiveList,
+    navListShow
   },
   props: {},
   data() {
     return {
       active: 0,
-      newsNavList: []
+      userNavList: [],
+      // 汉堡按钮弹出层
+      navListShow: false
     }
   },
   created() {
-    this.getNewsNav()
+    this.getUserNewsNav()
   },
   mounted() {},
   methods: {
     // 获取 新闻导航 列表
-    async getNewsNav() {
+    async getUserNewsNav() {
       try {
-        const { data } = await getNewsNav()
-        this.newsNavList = data.data.channels
-        // console.log(this.newsNavList)
+        const { data } = await getUserNewsNav()
+        this.userNavList = data.data.channels
+        // console.log(this.userNavList)
       } catch (err) {
         this.$toast('频道列表获取失败')
       }
@@ -68,6 +78,7 @@ export default {
     width: 100%;
   }
   // 用于更改框架的深层格式，默认最大宽度为60%
+  // deep 能将 css样式 影响到 子组件
   /deep/ .van-nav-bar__title {
     max-width: unset; // 不设置
   }
@@ -147,6 +158,10 @@ export default {
       background-image: url(~@/assets/gradient-gray-line.png);
       background-size: contain;
     }
+  }
+  .edit-channel-popup {
+    padding-top: 100px;
+    box-sizing: border-box;
   }
 }
 </style>
