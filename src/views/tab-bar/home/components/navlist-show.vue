@@ -1,27 +1,39 @@
 <template>
   <div class="navlist-show">
     <van-cell title="我的频道" :border="false">
-      <van-button size="mini" round type="danger" plain class="btn">编辑</van-button>
+      <van-button size="mini" round type="danger" plain class="btn" @click="isEditShow=!isEditShow">{{ isEditShow ? '完成': '编辑' }}</van-button>
     </van-cell>
-    <van-grid :gutter="10">
-      <van-grid-item class="channel-item" v-for="value in userNavList" :key="value.id" :text="value.name" icon="close" />
+    <van-grid :gutter="10" clickable>
+      <van-grid-item class="channel-item" v-for="(value,i) in userNavList" :key="i" :text="value.name" @click="itemChange(value,i)">
+        <van-icon v-show="isEditShow && i !== 0" slot="icon" name="close" />
+        <span class="text" :class="{active: active === i}" slot="text">{{value.name}}</span>
+      </van-grid-item>
     </van-grid>
     <van-cell title="频道推荐" :border="false"></van-cell>
-    <van-grid :gutter="10">
-      <van-grid-item class="channel-item" v-for="value in recomendList" :key="value.id" :text="value.name" icon="plus" clickable />
+    <van-grid :gutter="10" clickable>
+      <van-grid-item class="channel-item" v-for="(value,i) in recomendList" :key="i" :text="value.name" icon="plus" @click="addNavList(value)">
+        <span class="text" slot="text">{{value.name}}</span>
+      </van-grid-item>
     </van-grid>
   </div>
 </template>
 
 <script>
-import { getNewsNav } from '@/api/user'
+import { mapState } from 'vuex'
+import { setItem } from '@/utils/storage'
+import { getNewsNav, addNavItem, removeNavItem } from '@/api/navList'
 export default {
   name: 'navListShow',
   components: {},
-  props: ['userNavList'],
+  props: {
+    userNavList: { type: Array, required: true },
+    active: { type: Number, required: true }
+  },
   data() {
     return {
-      navListAll: []
+      navListAll: [],
+      // 控制编辑是否开始
+      isEditShow: false
     }
   },
   created() {
@@ -37,19 +49,61 @@ export default {
       } catch (err) {
         this.$toast('推荐频道列表获取失败')
       }
+    },
+    // 列表点击 切换高亮 或 删除 列表项
+    async itemChange(item, i) {
+      if (this.isEditShow) {
+        // 点击删除
+        if (i === 0) return this.$toast('推荐频道禁止移除')
+        if (i <= this.active) {
+          this.$emit('changeActive', this.active - 1, true)
+        }
+        // 前端删除
+        this.userNavList.splice(i, 1)
+        // 移除 选中列表项
+        try {
+          if (this.token) {
+            await removeNavItem(item.id)
+            this.$toast.success('删除成功')
+          } else {
+            setItem('navList', this.userNavList)
+          }
+        } catch (err) {
+          this.$toast.success('删除失败')
+        }
+      } else {
+        // 更改高亮选项
+        this.$emit('changeActive', i, false)
+      }
+    },
+    // 添加导航列表项
+    async addNavList(value) {
+      // 前端添加
+      this.userNavList.push(value)
+      try {
+        // 是否有 token 值
+        if (this.token) {
+          await addNavItem(value.id, this.userNavList.length)
+          this.$toast.success('添加频道成功')
+        } else {
+          setItem('navList', this.userNavList)
+        }
+      } catch (err) {
+        this.$toast('添加频道失败')
+      }
     }
   },
   computed: {
     // 推荐列表 = 所有频道 - 用户频道
     recomendList() {
       return this.navListAll.filter((item) => {
-        const a = this.userNavList.find((index) => {
-          return index.id === item.id
+        const a = this.userNavList.find(({ id }) => {
+          return id === item.id
         })
-        console.log(a)
         return !a
       })
-    }
+    },
+    ...mapState(['token'])
   },
   watch: {}
 }
@@ -58,29 +112,35 @@ export default {
 .navlist-show {
   .channel-item {
     height: 86px;
-    /deep/ .van-icon-close {
-      position: absolute;
-      right: -10px;
-      top: -10px;
-      font-size: 36px;
-      color: #ccc;
-    }
     /deep/ .van-icon-plus {
       position: absolute;
-      left: 0px;
+      right: 0px;
       font-size: 36px;
-      color: #ccc;
+      color: green;
     }
     /deep/ .van-grid-item__content {
       flex-direction: row;
-      color: #222;
-      background-color: #f4f5f6;
+      // background-color: #f4f5f6;
+      .van-grid-item__text,
+      .text {
+        color: #222;
+        font-size: 20px;
+        white-space: nowrap;
+        margin-top: 0;
+        width: 100%;
+      }
+      .active {
+        color: red;
+      }
       .van-icon {
         font-size: 24px;
       }
-      .van-grid-item__text {
-        font-size: 20px;
-        margin-top: 0;
+      .van-icon-close {
+        position: absolute;
+        top: -50px;
+        left: 120px;
+        font-size: 36px;
+        color: red;
       }
     }
   }

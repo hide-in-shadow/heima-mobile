@@ -9,14 +9,14 @@
 </template>
 
 <script>
-import { getArticleList } from '@/api/user'
+import { getArticleList } from '@/api/navList'
 import articleItem from './article-item/index.vue'
 export default {
   name: 'articleList',
   components: {
     articleItem
   },
-  props: ['newsNav'],
+  props: { newsNav: { type: Object, required: true } },
   data() {
     return {
       list: [],
@@ -81,5 +81,10 @@ export default {
   watch: {}
 }
 </script>
+
 <style scoped lang="less">
+.artcile-list {
+  height: 79vh;
+  overflow: auto;
+}
 </style>

@@ -24,13 +24,15 @@
     <!-- 汉堡按钮弹出层 -->
     <van-popup v-model="navListShow" :overlay='false' closeable position="bottom" round :style="{ height: '100%' }" class="edit-channel-popup">
       <!-- 弹出层内容 -->
-      <navListShow :userNavList='userNavList' />
+      <navListShow @changeActive='changeActive' :userNavList='userNavList' :active='active' />
     </van-popup>
   </div>
 </template>
 
 <script>
-import { getUserNewsNav } from '@/api/user'
+import { mapState } from 'vuex'
+import { getItem } from '@/utils/storage'
+import { getUserNewsNav } from '@/api/navList'
 import artiveList from './components/acticle-list'
 import navListShow from './components/navlist-show'
 export default {
@@ -56,15 +58,36 @@ export default {
     // 获取 新闻导航 列表
     async getUserNewsNav() {
       try {
-        const { data } = await getUserNewsNav()
-        this.userNavList = data.data.channels
-        // console.log(this.userNavList)
+        // 如果没有token 且 本地有存储
+        if (this.token) {
+          const { data } = await getUserNewsNav()
+          this.userNavList = data.data.channels
+          console.log(333)
+        } else {
+          if (getItem('navList')) {
+            this.userNavList = getItem('navList')
+            console.log(1111)
+          } else {
+            const { data } = await getUserNewsNav()
+            this.userNavList = data.data.channels
+            console.log(222)
+          }
+        }
+        console.log(this.userNavList)
       } catch (err) {
         this.$toast('频道列表获取失败')
       }
+    },
+    // 获取 传递过来的 navlist-show 里 的active 数据
+    changeActive(i, show) {
+      // 更改高亮选项 并关闭弹出层
+      this.active = i
+      this.navListShow = show
     }
   },
-  computed: {},
+  computed: {
+    ...mapState(['token'])
+  },
   watch: {}
 }
 </script>

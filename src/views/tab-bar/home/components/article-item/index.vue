@@ -1,9 +1,10 @@
 <template>
   <van-cell class="article-item">
-    <div slot="title" class="title">{{ item.title }}</div>
+    <!-- van-multi-ellipsis--l2 是超出两行内容用省略号显示 -->
+    <div slot="title" class="title van-multi-ellipsis--l2">{{ item.title }}</div>
     <div slot="label">
       <div v-if="item.cover.type === 3" class="cover-wrap">
-        <div class="cover-item" v-for="(img, index) in item.cover.images" :key="index">
+        <div class="cover-item" v-for="(img, i) in item.cover.images" :key="i">
           <van-image class="cover-item-img" fit="cover" :src="img" />
         </div>
       </div>
@@ -22,7 +23,7 @@
 export default {
   name: 'articleItem',
   components: {},
-  props: ['item'],
+  props: { item: { type: Object, required: true } },
   data() {
     return {}
   },
