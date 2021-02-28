@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="label-info-wrap">
-        <span v-if='item.is_top' class='top'>置顶</span>
+        <van-tag v-if='item.is_top' color="#E22829" text-color="#fff">置顶</van-tag>
         <span>{{ item.aut_name }}</span>
         <span>{{ item.comm_count }}评论</span>
         <span>{{ item.pubdate | relativeTime }}</span>

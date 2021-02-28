@@ -62,18 +62,15 @@ export default {
         if (this.token) {
           const { data } = await getUserNewsNav()
           this.userNavList = data.data.channels
-          console.log(333)
         } else {
           if (getItem('navList')) {
             this.userNavList = getItem('navList')
-            console.log(1111)
           } else {
             const { data } = await getUserNewsNav()
             this.userNavList = data.data.channels
-            console.log(222)
           }
         }
-        console.log(this.userNavList)
+        // console.log(this.userNavList)
       } catch (err) {
         this.$toast('频道列表获取失败')
       }

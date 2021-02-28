@@ -97,10 +97,9 @@ export default {
     // 推荐列表 = 所有频道 - 用户频道
     recomendList() {
       return this.navListAll.filter((item) => {
-        const a = this.userNavList.find(({ id }) => {
+        return !this.userNavList.find(({ id }) => {
           return id === item.id
         })
-        return !a
       })
     },
     ...mapState(['token'])
