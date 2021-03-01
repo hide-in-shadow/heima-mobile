@@ -90,6 +90,7 @@ export default {
           setItem('hostoryList', arr)
         } else {
           // TODO:  后端 删除指定项接口
+          this.$toast('删除指定历史项,无后端接口')
         }
         // 删除完成后 重新渲染
         this.getHistoryList()
