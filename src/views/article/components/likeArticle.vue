@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { addLike, deleteLike } from '@/api/acticle'
+import { addLike, deleteLike } from '@/api/article'
 export default {
   name: 'likeActicle',
   components: {},
@@ -13,7 +13,7 @@ export default {
   },
   props: {
     isLike: { type: [Number, String], required: true },
-    acticleId: { type: [Number, String, Object], required: true }
+    articleId: { type: [Number, String, Object], required: true }
   },
   data() {
     return {
@@ -28,9 +28,9 @@ export default {
       this.isLoading = true
       try {
         if (this.isLike === 1) {
-          await deleteLike(this.acticleId)
+          await deleteLike(this.articleId)
         } else {
-          await addLike(this.acticleId)
+          await addLike(this.articleId)
         }
         this.$emit('change', this.isLike === 1 ? 0 : 1)
       } catch (err) {

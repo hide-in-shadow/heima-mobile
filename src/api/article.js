@@ -1,7 +1,7 @@
 import request from '@/utils/request.js'
 
 // 获取指定文章数据
-export const getActicleById = (id) => {
+export const getArticleById = (id) => {
   return request({
     method: 'get',
     url: `/app/v1_0/articles/${id}`

@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import { addCollect, deleteCollect } from '@/api/acticle'
+import { addCollect, deleteCollect } from '@/api/article'
 export default {
   name: 'collectActicle',
   components: {},
@@ -14,7 +14,7 @@ export default {
   },
   props: {
     isCollect: { type: Boolean, required: true },
-    acticleId: { type: [Number, String, Object], required: true }
+    articleId: { type: [Number, String, Object], required: true }
   },
   data() {
     return {
@@ -29,9 +29,9 @@ export default {
       this.isLoading = true
       try {
         if (this.isCollect) {
-          await deleteCollect(this.acticleId)
+          await deleteCollect(this.articleId)
         } else {
-          await addCollect(this.acticleId)
+          await addCollect(this.articleId)
         }
         this.$emit('change', !this.isCollect)
       } catch (err) {

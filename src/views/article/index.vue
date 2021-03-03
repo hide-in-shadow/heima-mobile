@@ -25,7 +25,7 @@
           <!-- 关注按钮 -->
           <!-- <userFollow :isFollow='article.is_followed' :userId="article.aut_id" @change="(value) => article.is_followed = value"></userFollow> -->
           <!-- 上下相同 v-model 实现父子传值绑定 -->
-          <userFollow v-model='article.is_followed' :use-id="article.aut_id"></userFollow>
+          <userFollow v-model='article.is_followed' :user-id="article.aut_id"></userFollow>
           <!-- /关注按钮 -->
         </van-cell>
         <!-- /用户信息 -->
@@ -33,6 +33,25 @@
         <!-- 文章内容 -->
         <div class="article-content markdown-body" v-html="article.content" ref='contentRef'></div>
         <van-divider>正文结束</van-divider>
+
+        <!-- 文章评论列表 -->
+        <articleComment :add-object="addObject" :article-id="article.art_id" @getTotal="totalCount = $event"></articleComment>
+        <!-- /文章评论列表 -->
+
+        <!-- 底部区域 -->
+        <!-- 当 article 数据获取成功后 再向子组件传值 -->
+        <div class="article-bottom">
+          <van-button class="comment-btn" type="default" round size="small" @click="commentShow = true">写评论</van-button>
+          <!-- 评论 -->
+          <van-icon name="comment-o" :badge="totalCount" color="#777" />
+          <!-- 收藏 -->
+          <collectArticle v-model="article.is_collected" :article-id="article.art_id"></collectArticle>
+          <!-- 点赞 -->
+          <likeArticle v-model="article.attitude" :article-id="article.art_id"></likeArticle>
+          <!-- 转发 -->
+          <van-icon name="share" color="#777777"></van-icon>
+        </div>
+        <!-- /底部区域 -->
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -52,42 +71,31 @@
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
 
-    <!-- 文章评论 -->
-    <acticleComment></acticleComment>
-    <!-- /文章评论 -->
-
-    <!-- 底部区域 -->
-    <!-- 当 article 数据获取成功后 再向子组件传值 -->
-    <div class="article-bottom" v-if="isArticle">
-      <van-button class="comment-btn" type="default" round size="small">写评论</van-button>
-      <!-- 评论 -->
-      <van-icon name="comment-o" badge="321" color="#777" />
-      <!-- 收藏 -->
-      <collectArticle v-model="article.is_collected" :acticle-id="article.art_id"></collectArticle>
-      <!-- 点赞 -->
-      <likeArticle v-model="article.attitude" :acticle-id="article.art_id"></likeArticle>
-      <!-- 转发 -->
-      <van-icon name="share" color="#777777"></van-icon>
-    </div>
-    <!-- /底部区域 -->
+    <!-- 写评论弹出层 -->
+    <van-popup v-model="commentShow" position="bottom">
+      <postComment :article-id="article.art_id" @add="addComment"></postComment>
+    </van-popup>
+    <!-- /写评论弹出层 -->
   </div>
 </template>
 
 <script>
-import { getActicleById } from '@/api/acticle'
+import { getArticleById } from '@/api/article'
 import './github-markdown.css'
 import { ImagePreview } from 'vant'
 import userFollow from './components/userFollow'
 import likeArticle from './components/likeArticle'
 import collectArticle from './components/collectArticle'
-import acticleComment from './components/acticleComment'
+import articleComment from './components/comments/articleComment'
+import postComment from './components/comments/post-comment'
 export default {
-  name: 'acticle',
+  name: 'articlePage',
   components: {
     userFollow,
     likeArticle,
     collectArticle,
-    acticleComment
+    articleComment,
+    postComment
   },
   props: {
     articleId: {
@@ -100,7 +108,10 @@ export default {
       article: {},
       isArticle: false, // 判断数据已经获取
       isLoading: true, // 加载中
-      errStatus: false // 404报错 则 变为 true
+      errStatus: false, // 404报错 则 变为 true
+      totalCount: 0, // 评论数据总数
+      commentShow: false, // 控制写评论弹出层
+      addObject: {} // 子组件 评论 更新数据
     }
   },
   created() {
@@ -111,7 +122,7 @@ export default {
     // 获取文章详情数据
     async getActicle() {
       try {
-        const { data } = await getActicleById(this.articleId)
+        const { data } = await getArticleById(this.articleId)
         this.article = data.data
         this.isArticle = true // 数据获取完成 可以渲染组件
         // 数据加载完成
@@ -146,6 +157,11 @@ export default {
           })
         }
       })
+    },
+    // 添加评论 传过来的方法
+    addComment(newObj) {
+      this.commentShow = false // 关闭弹出层
+      this.addObject = newObj // 子组件 更新的数据
     }
   },
   computed: {},

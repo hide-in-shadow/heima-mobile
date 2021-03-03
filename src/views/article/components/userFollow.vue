@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import { addFollow, deleteFollow } from '@/api/acticle'
+import { addFollow, deleteFollow } from '@/api/article'
 export default {
   name: 'userFollow',
   components: {},
