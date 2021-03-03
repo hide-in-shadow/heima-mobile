@@ -14,10 +14,11 @@ module.exports = {
     // 作用：把 px 转为 rem
     'postcss-pxtorem': {
       // rootValue: 37.5,
-      rootValue({file}) {
+      rootValue({ file }) {
         return file.indexOf('vant') !== -1 ? 37.5 : 75
       },
-      propList: ['*']
+      propList: ['*'],
+      exclude: 'github-markdown' // 配置不要转换样式文件中的字号
     }
   }
 }

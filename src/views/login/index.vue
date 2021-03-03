@@ -36,7 +36,7 @@ export default {
     return {
       // 登录表单
       loginForm: {
-        mobile: '13911111111',
+        mobile: '13911111117',
         code: '246810'
       },
       // 登录表单验证规则

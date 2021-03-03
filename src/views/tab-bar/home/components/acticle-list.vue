@@ -83,7 +83,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-.artcile-list {
+/deep/ .artcile-list {
   height: 79vh;
   overflow: auto;
 }

@@ -91,6 +91,7 @@ export default {
 
 <style scoped lang="less">
 .home-container {
+  padding-top: 90px;
   .van-tabs__wrap {
     position: fixed;
     top: 92px;
@@ -126,9 +127,7 @@ export default {
     .van-tab--active .van-tab__text {
       color: #333 !important;
     }
-    .van-tabs__content {
-      padding-top: 90px;
-    }
+
     .van-tabs__nav--line {
       height: unset; // 不设置
       .artcile-list {

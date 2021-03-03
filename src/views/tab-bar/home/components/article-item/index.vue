@@ -1,5 +1,15 @@
 <template>
-  <van-cell class="article-item">
+  <!-- <van-cell class="article-item" :to="{
+      // 根据路由名称跳转
+      name: 'article',
+      // 参数属性名是配置路由时指定的名称，path: '/article/:articleId',
+      params: {
+        articleId: article.art_id
+      }
+    }"> -->
+  <!-- 上下两种方式相同 -->
+  <van-cell class="article-item" :to="`/article/${item.art_id}`">
+
     <!-- van-multi-ellipsis--l2 是超出两行内容用省略号显示 -->
     <div slot="title" class="title van-multi-ellipsis--l2">{{ item.title }}</div>
     <div slot="label">

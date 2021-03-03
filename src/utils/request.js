@@ -1,5 +1,5 @@
 import axios from 'axios'
-import jsonBig from 'json-bigint'
+import jsonBig from 'json-bigint' // 用于处理大数字数据
 import store from '@/store'
 import router from '@/router'
 
