@@ -1,6 +1,7 @@
 <template>
   <div class="update-avatar">
-    <img :src="img" />
+    <!-- <img :src="img" /> -->
+    <van-image class="img" fit="scale-down" :src="img" />
     <div class="toolbar">
       <span @click="$emit('close')">取消</span>
       <span>完成</span>
@@ -9,6 +10,7 @@
 </template>
 
 <script>
+// import { updateUserImg } from '@/api/user.js'
 export default {
   name: 'updataImg',
   components: {},
@@ -31,6 +33,12 @@ export default {
   background: #000;
   width: 100%;
   height: 100%;
+  .img {
+    // 定位居中
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
   .toolbar {
     position: fixed;
     bottom: 10px;
