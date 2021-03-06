@@ -12,7 +12,7 @@
       <!-- /加载中 -->
 
       <!-- 加载完成-文章详情 -->
-      <div class="article-detail" v-else-if="isArticle">
+      <div class="article-detail" v-else-if="article.title">
         <!-- 文章标题 -->
         <h1 class="article-title">{{article.title}}</h1>
         <!-- /文章标题 -->
@@ -35,7 +35,7 @@
         <van-divider>正文结束</van-divider>
 
         <!-- 文章评论列表 -->
-        <articleComment :add-object="addObject" :article-id="article.art_id" @getTotal="totalCount = $event"></articleComment>
+        <articleComment :id="article.art_id" :list="commentList" @getTotal="totalCount = $event" @show="replyComment"></articleComment>
         <!-- /文章评论列表 -->
 
         <!-- 底部区域 -->
@@ -66,16 +66,22 @@
       <div class="error-wrap" v-else>
         <van-icon name="failure" />
         <p class="text">内容加载失败！</p>
-        <van-button class="retry-btn" @click="getActicle()">点击重试</van-button>
+        <van-button class="retry-btn" @click="getActicle">点击重试</van-button>
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
 
     <!-- 写评论弹出层 -->
     <van-popup v-model="commentShow" position="bottom">
-      <postComment :article-id="article.art_id" @add="addComment"></postComment>
+      <postComment :target="article.art_id" @add="addComment"></postComment>
     </van-popup>
     <!-- /写评论弹出层 -->
+
+    <!-- 评论回复 -->
+    <van-popup v-model="replyShow" position="bottom" style="height: 95%">
+      <replyComment v-if="replyShow" :comment="comment" @close="replyShow = false"></replyComment>
+    </van-popup>
+    <!-- /评论回复 -->
   </div>
 </template>
 
@@ -83,11 +89,12 @@
 import { getArticleById } from '@/api/article'
 import './github-markdown.css'
 import { ImagePreview } from 'vant'
-import userFollow from './components/userFollow'
-import likeArticle from './components/likeArticle'
-import collectArticle from './components/collectArticle'
+import userFollow from '@/components/userFollow'
+import likeArticle from '@/components/likeArticle'
+import collectArticle from '@/components/collectArticle'
 import articleComment from './components/comments/articleComment'
 import postComment from './components/comments/post-comment'
+import replyComment from './components/comments/reply-comment'
 export default {
   name: 'articlePage',
   components: {
@@ -95,7 +102,14 @@ export default {
     likeArticle,
     collectArticle,
     articleComment,
-    postComment
+    postComment,
+    replyComment
+  },
+  // 给所有的后代组件提供数据 inject接收
+  provide: function () {
+    return {
+      articleId: this.articleId
+    }
   },
   props: {
     articleId: {
@@ -106,12 +120,13 @@ export default {
   data() {
     return {
       article: {},
-      isArticle: false, // 判断数据已经获取
-      isLoading: true, // 加载中
+      isLoading: false, // 加载中
       errStatus: false, // 404报错 则 变为 true
       totalCount: 0, // 评论数据总数
+      commentList: [], // 评论数据列表
       commentShow: false, // 控制写评论弹出层
-      addObject: {} // 子组件 评论 更新数据
+      replyShow: false, // 控制回复评论弹出层
+      comment: {} // 存储 评论的回复
     }
   },
   created() {
@@ -121,14 +136,18 @@ export default {
   methods: {
     // 获取文章详情数据
     async getActicle() {
+      this.loading = true
       try {
         const { data } = await getArticleById(this.articleId)
         this.article = data.data
-        this.isArticle = true // 数据获取完成 可以渲染组件
         // 数据加载完成
-        setTimeout(() => {
-          this.showImg() // 调用预览图片函数
-        }, 10)
+        // dom节点 渲染完成后 才会 执行 同时需要将loading关闭
+        this.isLoading = false
+        this.$nextTick(this.showImg)
+        // 将 showImg 变成 异步函数
+        // setTimeout(() => {
+        //   this.showImg() // 调用预览图片函数
+        // }, 10)
       } catch (err) {
         // 加载失败 404
         if (err.response && err.response.status === 404) {
@@ -161,7 +180,12 @@ export default {
     // 添加评论 传过来的方法
     addComment(newObj) {
       this.commentShow = false // 关闭弹出层
-      this.addObject = newObj // 子组件 更新的数据
+      this.commentList.unshift(newObj) // 向评论列表 开头 添加数据
+    },
+    // 添加对评论的回复
+    replyComment(item) {
+      this.replyShow = true // 开启弹出层
+      this.comment = item // 存储需要获取的回复的 评论项
     }
   },
   computed: {},
@@ -205,10 +229,6 @@ export default {
       .publish-date {
         font-size: 23px;
         color: #b7b7b7;
-      }
-      /deep/.follow-btn {
-        width: 170px;
-        height: 58px;
       }
     }
 

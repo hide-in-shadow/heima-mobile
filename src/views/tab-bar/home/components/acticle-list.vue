@@ -10,7 +10,7 @@
 
 <script>
 import { getArticleList } from '@/api/navList'
-import articleItem from './article-item/index.vue'
+import articleItem from '@/components/article-item'
 export default {
   name: 'articleList',
   components: {
@@ -83,8 +83,10 @@ export default {
 </script>
 
 <style scoped lang="less">
-/deep/ .artcile-list {
-  height: 79vh;
+// 列表公用一个滚轮 需要给父盒子一个高度
+// 用于让每个列表获得自己的 滚轮
+.article-list {
+  height: 79vh; // vh代表可视窗口宽度的百分之一
   overflow: auto;
 }
 </style>

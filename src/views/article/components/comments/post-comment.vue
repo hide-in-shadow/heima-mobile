@@ -10,8 +10,15 @@ import { addComment } from '@/api/comments'
 export default {
   name: 'postComment',
   components: {},
+  // 注入 可以从祖先组件中引入 数据 祖父组件provide 提供
+  inject: {
+    articleId: {
+      type: [Number, String, Object],
+      default: null
+    }
+  },
   props: {
-    articleId: { type: [Number, String, Object], required: true }
+    target: { type: [Number, String, Object], required: true }
   },
   data() {
     return {
@@ -25,17 +32,21 @@ export default {
       if (this.message === '') return this.$toast('评论内容不能为空')
       try {
         const data = await addComment({
-          target: this.articleId,
-          content: this.message
+          target: this.target.toString(),
+          content: this.message,
+          art_id: this.articleId ? this.articleId.toString() : null
         })
-        // console.log(data)
-        if (data.status === 201) {
-          this.message = ''
-          this.$emit('add', data.data.data.new_obj) // 执行了添加评论操作
-          this.$toast('评论成功')
-          // console.log(data.data.new_obj)
+        console.log(data)
+        this.message = ''
+        if (data.status !== 201) {
+          return this.$toast('评论失败，请重试！')
         }
+        // 返回的数据中没有 is_liking 所以需要添加
+        data.data.data.new_obj.is_liking = false
+        this.$emit('add', data.data.data.new_obj) // 执行了添加评论操作
+        this.$toast('评论成功')
       } catch (err) {
+        console.log(err)
         this.$toast('评论添加失败')
       }
     }

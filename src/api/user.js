@@ -24,3 +24,20 @@ export const getUser = () => {
     url: '/app/v1_0/user'
   })
 }
+
+// 获取指定用户 信息资料
+export const getUserProfile = () => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/user/profile'
+  })
+}
+
+// 编辑更新 用户的 信息
+export const updateUser = (data) => {
+  return request({
+    method: 'PATCH',
+    url: '/app/v1_0/user/profile',
+    data
+  })
+}

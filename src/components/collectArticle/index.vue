@@ -34,6 +34,9 @@ export default {
           await addCollect(this.articleId)
         }
         this.$emit('change', !this.isCollect)
+        this.$nextTick(() =>
+          this.$toast(this.isCollect ? '收藏成功' : '取消收藏')
+        )
       } catch (err) {
         // console.log(err)
         this.$toast.fail('操作失败')

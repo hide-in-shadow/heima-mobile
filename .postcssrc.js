@@ -17,8 +17,11 @@ module.exports = {
       rootValue({ file }) {
         return file.indexOf('vant') !== -1 ? 37.5 : 75
       },
+      // 配置要转换的CSS属性
+      // *表示所有
       propList: ['*'],
-      exclude: 'github-markdown' // 配置不要转换样式文件中的字号
+      // 配置 不要转换 样式文件
+      exclude: 'github-markdown'
     }
   }
 }

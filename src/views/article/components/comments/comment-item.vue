@@ -12,7 +12,7 @@
       <p class="comment-content">{{item.content}}</p>
       <div class="bottom-info">
         <span class="comment-pubdate">{{item.pubdate | relativeTime}}</span>
-        <van-button class="reply-btn" round>回复 {{item.reply_count}}</van-button>
+        <van-button class="reply-btn" round @click="$emit('show', item)">回复 {{item.reply_count}}</van-button>
       </div>
     </div>
   </van-cell>

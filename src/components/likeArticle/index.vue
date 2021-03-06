@@ -33,6 +33,9 @@ export default {
           await addLike(this.articleId)
         }
         this.$emit('change', this.isLike === 1 ? 0 : 1)
+        this.$nextTick(() =>
+          this.$toast(this.isLike === 1 ? '点赞成功' : '取消点赞')
+        )
       } catch (err) {
         // console.log(err)
         this.$toast.fail('操作失败')

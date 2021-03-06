@@ -1,5 +1,5 @@
 <template>
-  <van-button v-if="isFollow" class="follow-btn" round size="small" :loading="isFollowLoading" @click="changeFollow()">已关注</van-button>
+  <van-button v-if="isFollow" class="follow-btn" round size="small" :loading="isFollowLoading" @click="changeFollow()">取消关注</van-button>
   <van-button v-else class="follow-btn" type="info" color="#3296fa" round size="small" icon="plus" :loading="isFollowLoading" @click="changeFollow()">关注</van-button>
 </template>
 
@@ -39,6 +39,10 @@ export default {
         }
         // 更新视图
         this.$emit('change', !this.isFollow)
+        // 在视图更新完后 才会触发 需要一个返回值
+        this.$nextTick(() =>
+          this.$toast(this.isFollow ? '取消关注' : '关注成功')
+        )
       } catch (err) {
         // console.log(err)
         if (err.response && err.response.status === 400) {
@@ -55,4 +59,8 @@ export default {
 </script>
 
 <style scoped lang="less">
+.follow-btn {
+  width: 170px;
+  height: 58px;
+}
 </style>

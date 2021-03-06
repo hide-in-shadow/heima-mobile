@@ -14,10 +14,7 @@ export default {
   name: 'searchResult',
   components: {},
   props: {
-    searchText: {
-      type: String,
-      require: true
-    }
+    searchText: { type: String, required: true }
   },
   data() {
     return {
