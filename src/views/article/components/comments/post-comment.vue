@@ -34,7 +34,10 @@ export default {
         const data = await addComment({
           target: this.target.toString(),
           content: this.message,
-          art_id: this.articleId ? this.articleId.toString() : null
+          art_id:
+            this.articleId.toString() === this.target.toString()
+              ? null
+              : this.articleId.toString()
         })
         console.log(data)
         this.message = ''

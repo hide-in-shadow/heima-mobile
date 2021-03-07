@@ -18,18 +18,18 @@
     </van-popup>
 
     <!-- 修改性别弹窗 -->
-    <van-popup v-model="showSex" style="height: 100%" position="bottom">
+    <van-popup v-model="showSex" position="bottom">
       <userSex @close="showSex = false" v-model="userMessage.gender" v-if="showSex"></userSex>
     </van-popup>
 
     <!-- 编辑生日弹层 -->
-    <van-popup v-model="showBirthdy" style="height: 100%" position="bottom">
+    <van-popup v-model="showBirthdy" position="bottom">
       <updateBirthdy @close="showBirthdy = false" v-model="userMessage.birthday" v-if="showBirthdy"></updateBirthdy>
     </van-popup>
 
     <!-- 编辑头像弹层 -->
     <van-popup v-model="showImg" style="height: 100%" position="bottom">
-      <updateImg @close="showImg = false" v-if="showImg" :img="img"></updateImg>
+      <updateImg @close="showImg = false" v-if="showImg" :img="img" @updateImg="userMessage.photo = $event"></updateImg>
     </van-popup>
     <!-- 编辑头像弹层 -->
   </div>
@@ -57,7 +57,7 @@ export default {
       showSex: false, // 更改性别弹出层
       showBirthdy: false, // 更改生日弹出层
       showImg: false, // 更改头像弹出层
-      img: '' // 用于存储 预览的 图片
+      img: '' // 用于存储 预览的 图片 blob格式
     }
   },
   created() {
@@ -79,10 +79,12 @@ export default {
     inputChange() {
       // 获取 选择的图片文件对象
       const file = this.$refs.inputFile.files[0]
-      // TODO:下面两步 还不清楚 作用
-      // 获取blob数据
+      // 将图片转换为 blob 格式使用
+      // 获取 blob 数据 是一种 图片的格式信息  还有一种是 base64格式的
       this.img = window.URL.createObjectURL(file)
       this.showImg = true
+      // file-input 如果选择同一个文件，不会触发 @change事件
+      // 解决方法就是使用完毕后，清空 value值
       // 用于将上传的数据清除,便于下次上传
       this.$refs.inputFile.value = ''
     }

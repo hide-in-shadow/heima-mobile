@@ -54,6 +54,6 @@ export default {
 
 <style scoped lang="less">
 /deep/.van-cell {
-  background: #f5f7f9;
+  background-color: #f5f7f9;
 }
 </style>

@@ -14,7 +14,7 @@ export default {
   data() {
     return {
       minDate: new Date(1970, 0, 1),
-      maxDate: new Date(2030, 11, 31),
+      maxDate: new Date(),
       currentDate: new Date(this.value)
     }
   },
@@ -45,4 +45,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+/deep/ .van-picker__columns {
+  background-color: #dddddd !important;
+}
 </style>

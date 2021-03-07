@@ -40,4 +40,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+/deep/ .van-picker__columns {
+  background-color: #dddddd !important;
+}
 </style>
